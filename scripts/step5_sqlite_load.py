@@ -1,11 +1,19 @@
+import os
 import sqlite3
 import pandas as pd
 
-# connect database
-conn = sqlite3.connect("company.db")
+# root project path
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# read csv
-df = pd.read_csv("clean_employees.csv")
+# file paths
+csv_path = os.path.join(BASE_DIR, "clean_employees.csv")
+db_path = os.path.join(BASE_DIR, "company.db")
+
+# connect database
+conn = sqlite3.connect(db_path)
+
+# read cleaned data
+df = pd.read_csv(csv_path)
 
 # insert ke database
 df.to_sql("employees", conn, if_exists="replace", index=False)
@@ -14,9 +22,9 @@ print("Data inserted into database!")
 
 # query database
 query = "SELECT * FROM employees"
-
 result = pd.read_sql(query, conn)
 
+print("\nDatabase Result:")
 print(result)
 
 # close connection
